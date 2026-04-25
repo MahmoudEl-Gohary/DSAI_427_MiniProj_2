@@ -1,5 +1,6 @@
 Query 1: SQL API
-Execution Time Q1: 5.2636 seconds
+Execution Time Q1: 4.2160 seconds
+Memory Impact Q1: 0.00 MB
 == Parsed Logical Plan ==
 'Aggregate ['IncidentGrade], ['IncidentGrade, 'COUNT(1) AS count#113]
 +- 'Filter ('Category = Malware)
@@ -22,39 +23,41 @@ Aggregate [IncidentGrade#26], [IncidentGrade#26, count(1) AS count#113L]
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
 +- HashAggregate(keys=[IncidentGrade#26], functions=[count(1)], output=[IncidentGrade#26, count#113L])
-   +- Exchange hashpartitioning(IncidentGrade#26, 200), ENSURE_REQUIREMENTS, [plan_id=113]
-      +- HashAggregate(keys=[IncidentGrade#26], functions=[partial_count(1)], output=[IncidentGrade#26, count#120L])
+   +- Exchange hashpartitioning(IncidentGrade#26, 200), ENSURE_REQUIREMENTS, [plan_id=139]
+      +- HashAggregate(keys=[IncidentGrade#26], functions=[partial_count(1)], output=[IncidentGrade#26, count#127L])
          +- Project [IncidentGrade#26]
             +- Filter (isnotnull(Category#24) AND (Category#24 = Malware))
                +- FileScan csv [Category#24,IncidentGrade#26] Batched: false, DataFilters: [isnotnull(Category#24), (Category#24 = Malware)], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/home/hduser/mini_project_2/data/GUIDE_Test.csv], PartitionFilters: [], PushedFilters: [IsNotNull(Category), EqualTo(Category,Malware)], ReadSchema: struct<Category:string,IncidentGrade:string>
 
 Query 2: SQL API
-Execution Time Q2: 4.1645 seconds
+Execution Time Q2: 3.6659 seconds
+Memory Impact Q2: 26.11 MB
 == Parsed Logical Plan ==
-'Aggregate ['Category, 'Usage], ['Category, 'Usage, 'COUNT(1) AS TotalCount#123]
+'Aggregate ['Category, 'Usage], ['Category, 'Usage, 'COUNT(1) AS TotalCount#128]
 +- 'UnresolvedRelation [incidents], [], false
 
 == Analyzed Logical Plan ==
 Category: string, Usage: string, TotalCount: bigint
-Aggregate [Category#24, Usage#62], [Category#24, Usage#62, count(1) AS TotalCount#123L]
+Aggregate [Category#24, Usage#62], [Category#24, Usage#62, count(1) AS TotalCount#128L]
 +- SubqueryAlias incidents
    +- View (`incidents`, [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,EmailClusterId#41,RegistryKey#42,RegistryValueName#43,RegistryValueData#44,ApplicationId#45,ApplicationName#46,OAuthApplicationId#47,ThreatFamily#48,FileName#49,FolderPath#50,ResourceIdName#51,ResourceType#52,Roles#53,OSFamily#54,OSVersion#55,AntispamDirection#56,SuspicionLevel#57,LastVerdict#58,CountryCode#59,State#60,City#61,Usage#62])
       +- Relation [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,... 22 more fields] csv
 
 == Optimized Logical Plan ==
-Aggregate [Category#24, Usage#62], [Category#24, Usage#62, count(1) AS TotalCount#123L]
+Aggregate [Category#24, Usage#62], [Category#24, Usage#62, count(1) AS TotalCount#128L]
 +- Project [Category#24, Usage#62]
    +- Relation [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,... 22 more fields] csv
 
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
-+- HashAggregate(keys=[Category#24, Usage#62], functions=[count(1)], output=[Category#24, Usage#62, TotalCount#123L])
-   +- Exchange hashpartitioning(Category#24, Usage#62, 200), ENSURE_REQUIREMENTS, [plan_id=185]
-      +- HashAggregate(keys=[Category#24, Usage#62], functions=[partial_count(1)], output=[Category#24, Usage#62, count#132L])
++- HashAggregate(keys=[Category#24, Usage#62], functions=[count(1)], output=[Category#24, Usage#62, TotalCount#128L])
+   +- Exchange hashpartitioning(Category#24, Usage#62, 200), ENSURE_REQUIREMENTS, [plan_id=237]
+      +- HashAggregate(keys=[Category#24, Usage#62], functions=[partial_count(1)], output=[Category#24, Usage#62, count#144L])
          +- FileScan csv [Category#24,Usage#62] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/home/hduser/mini_project_2/data/GUIDE_Test.csv], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<Category:string,Usage:string>
 
 Query 3: SQL API
-Execution Time Q3: 16.3213 seconds
+Execution Time Q3: 3.6023 seconds
+Memory Impact Q3: 0.00 MB
 == Parsed Logical Plan ==
 'Project [*]
 +- 'Filter (('Usage = Public) AND NOT ('Category = Test))
@@ -77,113 +80,117 @@ Filter ((isnotnull(Usage#62) AND isnotnull(Category#24)) AND ((Usage#62 = Public
 +- FileScan csv [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,... 22 more fields] Batched: false, DataFilters: [isnotnull(Usage#62), isnotnull(Category#24), (Usage#62 = Public), NOT (Category#24 = Test)], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/home/hduser/mini_project_2/data/GUIDE_Test.csv], PartitionFilters: [], PushedFilters: [IsNotNull(Usage), IsNotNull(Category), EqualTo(Usage,Public), Not(EqualTo(Category,Test))], ReadSchema: struct<Id:bigint,OrgId:int,IncidentId:int,AlertId:int,Timestamp:timestamp,DetectorId:int,AlertTit...
 
 Query 4: SQL API
-Execution Time Q4: 4.8600 seconds
+Execution Time Q4: 3.9501 seconds
+Memory Impact Q4: 121.85 MB
 == Parsed Logical Plan ==
 'Sort ['count DESC NULLS LAST], true
-+- 'Aggregate ['AlertTitle], ['AlertTitle, 'COUNT(1) AS count#273]
++- 'Aggregate ['AlertTitle], ['AlertTitle, 'COUNT(1) AS count#244]
    +- 'UnresolvedRelation [incidents], [], false
 
 == Analyzed Logical Plan ==
 AlertTitle: int, count: bigint
-Sort [count#273L DESC NULLS LAST], true
-+- Aggregate [AlertTitle#23], [AlertTitle#23, count(1) AS count#273L]
+Sort [count#244L DESC NULLS LAST], true
++- Aggregate [AlertTitle#23], [AlertTitle#23, count(1) AS count#244L]
    +- SubqueryAlias incidents
       +- View (`incidents`, [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,EmailClusterId#41,RegistryKey#42,RegistryValueName#43,RegistryValueData#44,ApplicationId#45,ApplicationName#46,OAuthApplicationId#47,ThreatFamily#48,FileName#49,FolderPath#50,ResourceIdName#51,ResourceType#52,Roles#53,OSFamily#54,OSVersion#55,AntispamDirection#56,SuspicionLevel#57,LastVerdict#58,CountryCode#59,State#60,City#61,Usage#62])
          +- Relation [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,... 22 more fields] csv
 
 == Optimized Logical Plan ==
-Sort [count#273L DESC NULLS LAST], true
-+- Aggregate [AlertTitle#23], [AlertTitle#23, count(1) AS count#273L]
+Sort [count#244L DESC NULLS LAST], true
++- Aggregate [AlertTitle#23], [AlertTitle#23, count(1) AS count#244L]
    +- Project [AlertTitle#23]
       +- Relation [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,... 22 more fields] csv
 
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
-+- Sort [count#273L DESC NULLS LAST], true, 0
-   +- Exchange rangepartitioning(count#273L DESC NULLS LAST, 200), ENSURE_REQUIREMENTS, [plan_id=349]
-      +- HashAggregate(keys=[AlertTitle#23], functions=[count(1)], output=[AlertTitle#23, count#273L])
-         +- Exchange hashpartitioning(AlertTitle#23, 200), ENSURE_REQUIREMENTS, [plan_id=346]
-            +- HashAggregate(keys=[AlertTitle#23], functions=[partial_count(1)], output=[AlertTitle#23, count#280L])
++- Sort [count#244L DESC NULLS LAST], true, 0
+   +- Exchange rangepartitioning(count#244L DESC NULLS LAST, 200), ENSURE_REQUIREMENTS, [plan_id=396]
+      +- HashAggregate(keys=[AlertTitle#23], functions=[count(1)], output=[AlertTitle#23, count#244L])
+         +- Exchange hashpartitioning(AlertTitle#23, 200), ENSURE_REQUIREMENTS, [plan_id=393]
+            +- HashAggregate(keys=[AlertTitle#23], functions=[partial_count(1)], output=[AlertTitle#23, count#257L])
                +- FileScan csv [AlertTitle#23] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/home/hduser/mini_project_2/data/GUIDE_Test.csv], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<AlertTitle:int>
 
 Query 5: SQL API
-Execution Time Q5: 5.4333 seconds
+Execution Time Q5: 4.0281 seconds
+Memory Impact Q5: 0.00 MB
 == Parsed Logical Plan ==
-'Project ['Category, 'AlertTitle, 'count, 'RANK() windowspecdefinition('Category, 'count DESC NULLS LAST, unspecifiedframe$()) AS Rank#283]
+'Project ['Category, 'AlertTitle, 'count, 'RANK() windowspecdefinition('Category, 'count DESC NULLS LAST, unspecifiedframe$()) AS Rank#259]
 +- 'SubqueryAlias __auto_generated_subquery_name
-   +- 'Aggregate ['Category, 'AlertTitle], ['Category, 'AlertTitle, 'COUNT(1) AS count#282]
+   +- 'Aggregate ['Category, 'AlertTitle], ['Category, 'AlertTitle, 'COUNT(1) AS count#258]
       +- 'UnresolvedRelation [incidents], [], false
 
 == Analyzed Logical Plan ==
 Category: string, AlertTitle: int, count: bigint, Rank: int
-Project [Category#24, AlertTitle#23, count#282L, Rank#283]
-+- Project [Category#24, AlertTitle#23, count#282L, Rank#283, Rank#283]
-   +- Window [rank(count#282L) windowspecdefinition(Category#24, count#282L DESC NULLS LAST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS Rank#283], [Category#24], [count#282L DESC NULLS LAST]
-      +- Project [Category#24, AlertTitle#23, count#282L]
+Project [Category#24, AlertTitle#23, count#258L, Rank#259]
++- Project [Category#24, AlertTitle#23, count#258L, Rank#259, Rank#259]
+   +- Window [rank(count#258L) windowspecdefinition(Category#24, count#258L DESC NULLS LAST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS Rank#259], [Category#24], [count#258L DESC NULLS LAST]
+      +- Project [Category#24, AlertTitle#23, count#258L]
          +- SubqueryAlias __auto_generated_subquery_name
-            +- Aggregate [Category#24, AlertTitle#23], [Category#24, AlertTitle#23, count(1) AS count#282L]
+            +- Aggregate [Category#24, AlertTitle#23], [Category#24, AlertTitle#23, count(1) AS count#258L]
                +- SubqueryAlias incidents
                   +- View (`incidents`, [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,EmailClusterId#41,RegistryKey#42,RegistryValueName#43,RegistryValueData#44,ApplicationId#45,ApplicationName#46,OAuthApplicationId#47,ThreatFamily#48,FileName#49,FolderPath#50,ResourceIdName#51,ResourceType#52,Roles#53,OSFamily#54,OSVersion#55,AntispamDirection#56,SuspicionLevel#57,LastVerdict#58,CountryCode#59,State#60,City#61,Usage#62])
                      +- Relation [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,... 22 more fields] csv
 
 == Optimized Logical Plan ==
-Window [rank(count#282L) windowspecdefinition(Category#24, count#282L DESC NULLS LAST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS Rank#283], [Category#24], [count#282L DESC NULLS LAST]
-+- Aggregate [Category#24, AlertTitle#23], [Category#24, AlertTitle#23, count(1) AS count#282L]
+Window [rank(count#258L) windowspecdefinition(Category#24, count#258L DESC NULLS LAST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS Rank#259], [Category#24], [count#258L DESC NULLS LAST]
++- Aggregate [Category#24, AlertTitle#23], [Category#24, AlertTitle#23, count(1) AS count#258L]
    +- Project [AlertTitle#23, Category#24]
       +- Relation [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,... 22 more fields] csv
 
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
-+- Window [rank(count#282L) windowspecdefinition(Category#24, count#282L DESC NULLS LAST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS Rank#283], [Category#24], [count#282L DESC NULLS LAST]
-   +- Sort [Category#24 ASC NULLS FIRST, count#282L DESC NULLS LAST], false, 0
-      +- Exchange hashpartitioning(Category#24, 200), ENSURE_REQUIREMENTS, [plan_id=490]
-         +- HashAggregate(keys=[Category#24, AlertTitle#23], functions=[count(1)], output=[Category#24, AlertTitle#23, count#282L])
-            +- Exchange hashpartitioning(Category#24, AlertTitle#23, 200), ENSURE_REQUIREMENTS, [plan_id=487]
-               +- HashAggregate(keys=[Category#24, AlertTitle#23], functions=[partial_count(1)], output=[Category#24, AlertTitle#23, count#302L])
++- Window [rank(count#258L) windowspecdefinition(Category#24, count#258L DESC NULLS LAST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS Rank#259], [Category#24], [count#258L DESC NULLS LAST]
+   +- Sort [Category#24 ASC NULLS FIRST, count#258L DESC NULLS LAST], false, 0
+      +- Exchange hashpartitioning(Category#24, 200), ENSURE_REQUIREMENTS, [plan_id=501]
+         +- HashAggregate(keys=[Category#24, AlertTitle#23], functions=[count(1)], output=[Category#24, AlertTitle#23, count#258L])
+            +- Exchange hashpartitioning(Category#24, AlertTitle#23, 200), ENSURE_REQUIREMENTS, [plan_id=498]
+               +- HashAggregate(keys=[Category#24, AlertTitle#23], functions=[partial_count(1)], output=[Category#24, AlertTitle#23, count#285L])
                   +- FileScan csv [AlertTitle#23,Category#24] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/home/hduser/mini_project_2/data/GUIDE_Test.csv], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<AlertTitle:int,Category:string>
 
 Query 6: SQL API
-Execution Time Q6: 9.6129 seconds
+Execution Time Q6: 7.8980 seconds
+Memory Impact Q6: 57.56 MB
 == Parsed Logical Plan ==
-'Project ['Timestamp, 'count, 'SUM('count) windowspecdefinition('Timestamp ASC NULLS FIRST, unspecifiedframe$()) AS CumulativeCount#306]
+'Project ['Timestamp, 'count, 'SUM('count) windowspecdefinition('Timestamp ASC NULLS FIRST, unspecifiedframe$()) AS CumulativeCount#287]
 +- 'SubqueryAlias __auto_generated_subquery_name
-   +- 'Aggregate ['Timestamp], ['Timestamp, 'COUNT(1) AS count#305]
+   +- 'Aggregate ['Timestamp], ['Timestamp, 'COUNT(1) AS count#286]
       +- 'UnresolvedRelation [incidents], [], false
 
 == Analyzed Logical Plan ==
 Timestamp: timestamp, count: bigint, CumulativeCount: bigint
-Project [Timestamp#21, count#305L, CumulativeCount#306L]
-+- Project [Timestamp#21, count#305L, CumulativeCount#306L, CumulativeCount#306L]
-   +- Window [sum(count#305L) windowspecdefinition(Timestamp#21 ASC NULLS FIRST, specifiedwindowframe(RangeFrame, unboundedpreceding$(), currentrow$())) AS CumulativeCount#306L], [Timestamp#21 ASC NULLS FIRST]
-      +- Project [Timestamp#21, count#305L]
+Project [Timestamp#21, count#286L, CumulativeCount#287L]
++- Project [Timestamp#21, count#286L, CumulativeCount#287L, CumulativeCount#287L]
+   +- Window [sum(count#286L) windowspecdefinition(Timestamp#21 ASC NULLS FIRST, specifiedwindowframe(RangeFrame, unboundedpreceding$(), currentrow$())) AS CumulativeCount#287L], [Timestamp#21 ASC NULLS FIRST]
+      +- Project [Timestamp#21, count#286L]
          +- SubqueryAlias __auto_generated_subquery_name
-            +- Aggregate [Timestamp#21], [Timestamp#21, count(1) AS count#305L]
+            +- Aggregate [Timestamp#21], [Timestamp#21, count(1) AS count#286L]
                +- SubqueryAlias incidents
                   +- View (`incidents`, [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,EmailClusterId#41,RegistryKey#42,RegistryValueName#43,RegistryValueData#44,ApplicationId#45,ApplicationName#46,OAuthApplicationId#47,ThreatFamily#48,FileName#49,FolderPath#50,ResourceIdName#51,ResourceType#52,Roles#53,OSFamily#54,OSVersion#55,AntispamDirection#56,SuspicionLevel#57,LastVerdict#58,CountryCode#59,State#60,City#61,Usage#62])
                      +- Relation [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,... 22 more fields] csv
 
 == Optimized Logical Plan ==
-Window [sum(count#305L) windowspecdefinition(Timestamp#21 ASC NULLS FIRST, specifiedwindowframe(RangeFrame, unboundedpreceding$(), currentrow$())) AS CumulativeCount#306L], [Timestamp#21 ASC NULLS FIRST]
-+- Aggregate [Timestamp#21], [Timestamp#21, count(1) AS count#305L]
+Window [sum(count#286L) windowspecdefinition(Timestamp#21 ASC NULLS FIRST, specifiedwindowframe(RangeFrame, unboundedpreceding$(), currentrow$())) AS CumulativeCount#287L], [Timestamp#21 ASC NULLS FIRST]
++- Aggregate [Timestamp#21], [Timestamp#21, count(1) AS count#286L]
    +- Project [Timestamp#21]
       +- Relation [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,... 22 more fields] csv
 
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
-+- Window [sum(count#305L) windowspecdefinition(Timestamp#21 ASC NULLS FIRST, specifiedwindowframe(RangeFrame, unboundedpreceding$(), currentrow$())) AS CumulativeCount#306L], [Timestamp#21 ASC NULLS FIRST]
++- Window [sum(count#286L) windowspecdefinition(Timestamp#21 ASC NULLS FIRST, specifiedwindowframe(RangeFrame, unboundedpreceding$(), currentrow$())) AS CumulativeCount#287L], [Timestamp#21 ASC NULLS FIRST]
    +- Sort [Timestamp#21 ASC NULLS FIRST], false, 0
-      +- Exchange SinglePartition, ENSURE_REQUIREMENTS, [plan_id=624]
-         +- HashAggregate(keys=[Timestamp#21], functions=[count(1)], output=[Timestamp#21, count#305L])
-            +- Exchange hashpartitioning(Timestamp#21, 200), ENSURE_REQUIREMENTS, [plan_id=621]
-               +- HashAggregate(keys=[Timestamp#21], functions=[partial_count(1)], output=[Timestamp#21, count#316L])
+      +- Exchange SinglePartition, ENSURE_REQUIREMENTS, [plan_id=607]
+         +- HashAggregate(keys=[Timestamp#21], functions=[count(1)], output=[Timestamp#21, count#286L])
+            +- Exchange hashpartitioning(Timestamp#21, 200), ENSURE_REQUIREMENTS, [plan_id=604]
+               +- HashAggregate(keys=[Timestamp#21], functions=[partial_count(1)], output=[Timestamp#21, count#303L])
                   +- FileScan csv [Timestamp#21] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/home/hduser/mini_project_2/data/GUIDE_Test.csv], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<Timestamp:timestamp>
 
 Query 7: SQL API
-Execution Time Q7: 7.5818 seconds
+Execution Time Q7: 7.5737 seconds
+Memory Impact Q7: 10.81 MB
 == Parsed Logical Plan ==
 'Distinct
 +- 'Project ['AlertTitle]
-   +- 'Filter ('IncidentGrade = scalar-subquery#319 [])
+   +- 'Filter ('IncidentGrade = scalar-subquery#304 [])
       :  +- 'GlobalLimit 1
       :     +- 'LocalLimit 1
       :        +- 'Sort ['COUNT(1) DESC NULLS LAST], true
@@ -195,15 +202,15 @@ Execution Time Q7: 7.5818 seconds
 AlertTitle: int
 Distinct
 +- Project [AlertTitle#23]
-   +- Filter (IncidentGrade#26 = scalar-subquery#319 [])
+   +- Filter (IncidentGrade#26 = scalar-subquery#304 [])
       :  +- GlobalLimit 1
       :     +- LocalLimit 1
-      :        +- Project [IncidentGrade#331]
-      :           +- Sort [count(1)#321L DESC NULLS LAST], true
-      :              +- Aggregate [IncidentGrade#331], [IncidentGrade#331, count(1) AS count(1)#321L]
+      :        +- Project [IncidentGrade#316]
+      :           +- Sort [count(1)#306L DESC NULLS LAST], true
+      :              +- Aggregate [IncidentGrade#316], [IncidentGrade#316, count(1) AS count(1)#306L]
       :                 +- SubqueryAlias incidents
-      :                    +- View (`incidents`, [Id#322L,OrgId#323,IncidentId#324,AlertId#325,Timestamp#326,DetectorId#327,AlertTitle#328,Category#329,MitreTechniques#330,IncidentGrade#331,ActionGrouped#332,ActionGranular#333,EntityType#334,EvidenceRole#335,DeviceId#336,Sha256#337,IpAddress#338,Url#339,AccountSid#340,AccountUpn#341,AccountObjectId#342,AccountName#343,DeviceName#344,NetworkMessageId#345,EmailClusterId#346,RegistryKey#347,RegistryValueName#348,RegistryValueData#349,ApplicationId#350,ApplicationName#351,OAuthApplicationId#352,ThreatFamily#353,FileName#354,FolderPath#355,ResourceIdName#356,ResourceType#357,Roles#358,OSFamily#359,OSVersion#360,AntispamDirection#361,SuspicionLevel#362,LastVerdict#363,CountryCode#364,State#365,City#366,Usage#367])
-      :                       +- Relation [Id#322L,OrgId#323,IncidentId#324,AlertId#325,Timestamp#326,DetectorId#327,AlertTitle#328,Category#329,MitreTechniques#330,IncidentGrade#331,ActionGrouped#332,ActionGranular#333,EntityType#334,EvidenceRole#335,DeviceId#336,Sha256#337,IpAddress#338,Url#339,AccountSid#340,AccountUpn#341,AccountObjectId#342,AccountName#343,DeviceName#344,NetworkMessageId#345,... 22 more fields] csv
+      :                    +- View (`incidents`, [Id#307L,OrgId#308,IncidentId#309,AlertId#310,Timestamp#311,DetectorId#312,AlertTitle#313,Category#314,MitreTechniques#315,IncidentGrade#316,ActionGrouped#317,ActionGranular#318,EntityType#319,EvidenceRole#320,DeviceId#321,Sha256#322,IpAddress#323,Url#324,AccountSid#325,AccountUpn#326,AccountObjectId#327,AccountName#328,DeviceName#329,NetworkMessageId#330,EmailClusterId#331,RegistryKey#332,RegistryValueName#333,RegistryValueData#334,ApplicationId#335,ApplicationName#336,OAuthApplicationId#337,ThreatFamily#338,FileName#339,FolderPath#340,ResourceIdName#341,ResourceType#342,Roles#343,OSFamily#344,OSVersion#345,AntispamDirection#346,SuspicionLevel#347,LastVerdict#348,CountryCode#349,State#350,City#351,Usage#352])
+      :                       +- Relation [Id#307L,OrgId#308,IncidentId#309,AlertId#310,Timestamp#311,DetectorId#312,AlertTitle#313,Category#314,MitreTechniques#315,IncidentGrade#316,ActionGrouped#317,ActionGranular#318,EntityType#319,EvidenceRole#320,DeviceId#321,Sha256#322,IpAddress#323,Url#324,AccountSid#325,AccountUpn#326,AccountObjectId#327,AccountName#328,DeviceName#329,NetworkMessageId#330,... 22 more fields] csv
       +- SubqueryAlias incidents
          +- View (`incidents`, [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,EmailClusterId#41,RegistryKey#42,RegistryValueName#43,RegistryValueData#44,ApplicationId#45,ApplicationName#46,OAuthApplicationId#47,ThreatFamily#48,FileName#49,FolderPath#50,ResourceIdName#51,ResourceType#52,Roles#53,OSFamily#54,OSVersion#55,AntispamDirection#56,SuspicionLevel#57,LastVerdict#58,CountryCode#59,State#60,City#61,Usage#62])
             +- Relation [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,... 22 more fields] csv
@@ -211,44 +218,45 @@ Distinct
 == Optimized Logical Plan ==
 Aggregate [AlertTitle#23], [AlertTitle#23]
 +- Project [AlertTitle#23]
-   +- Filter (isnotnull(IncidentGrade#26) AND (IncidentGrade#26 = scalar-subquery#319 []))
+   +- Filter (isnotnull(IncidentGrade#26) AND (IncidentGrade#26 = scalar-subquery#304 []))
       :  +- GlobalLimit 1
       :     +- LocalLimit 1
-      :        +- Project [IncidentGrade#331]
-      :           +- Sort [count(1)#321L DESC NULLS LAST], true
-      :              +- Aggregate [IncidentGrade#331], [IncidentGrade#331, count(1) AS count(1)#321L]
-      :                 +- Project [IncidentGrade#331]
-      :                    +- Relation [Id#322L,OrgId#323,IncidentId#324,AlertId#325,Timestamp#326,DetectorId#327,AlertTitle#328,Category#329,MitreTechniques#330,IncidentGrade#331,ActionGrouped#332,ActionGranular#333,EntityType#334,EvidenceRole#335,DeviceId#336,Sha256#337,IpAddress#338,Url#339,AccountSid#340,AccountUpn#341,AccountObjectId#342,AccountName#343,DeviceName#344,NetworkMessageId#345,... 22 more fields] csv
+      :        +- Project [IncidentGrade#316]
+      :           +- Sort [count(1)#306L DESC NULLS LAST], true
+      :              +- Aggregate [IncidentGrade#316], [IncidentGrade#316, count(1) AS count(1)#306L]
+      :                 +- Project [IncidentGrade#316]
+      :                    +- Relation [Id#307L,OrgId#308,IncidentId#309,AlertId#310,Timestamp#311,DetectorId#312,AlertTitle#313,Category#314,MitreTechniques#315,IncidentGrade#316,ActionGrouped#317,ActionGranular#318,EntityType#319,EvidenceRole#320,DeviceId#321,Sha256#322,IpAddress#323,Url#324,AccountSid#325,AccountUpn#326,AccountObjectId#327,AccountName#328,DeviceName#329,NetworkMessageId#330,... 22 more fields] csv
       +- Relation [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,... 22 more fields] csv
 
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
 +- HashAggregate(keys=[AlertTitle#23], functions=[], output=[AlertTitle#23])
-   +- Exchange hashpartitioning(AlertTitle#23, 200), ENSURE_REQUIREMENTS, [plan_id=786]
+   +- Exchange hashpartitioning(AlertTitle#23, 200), ENSURE_REQUIREMENTS, [plan_id=795]
       +- HashAggregate(keys=[AlertTitle#23], functions=[], output=[AlertTitle#23])
          +- Project [AlertTitle#23]
-            +- Filter (isnotnull(IncidentGrade#26) AND (IncidentGrade#26 = Subquery subquery#319, [id=#780]))
-               :  +- Subquery subquery#319, [id=#780]
+            +- Filter (isnotnull(IncidentGrade#26) AND (IncidentGrade#26 = Subquery subquery#304, [id=#789]))
+               :  +- Subquery subquery#304, [id=#789]
                :     +- AdaptiveSparkPlan isFinalPlan=false
-               :        +- TakeOrderedAndProject(limit=1, orderBy=[count(1)#321L DESC NULLS LAST], output=[IncidentGrade#331])
-               :           +- HashAggregate(keys=[IncidentGrade#331], functions=[count(1)], output=[IncidentGrade#331, count(1)#321L])
-               :              +- Exchange hashpartitioning(IncidentGrade#331, 200), ENSURE_REQUIREMENTS, [plan_id=777]
-               :                 +- HashAggregate(keys=[IncidentGrade#331], functions=[partial_count(1)], output=[IncidentGrade#331, count#371L])
-               :                    +- FileScan csv [IncidentGrade#331] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/home/hduser/mini_project_2/data/GUIDE_Test.csv], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<IncidentGrade:string>
+               :        +- TakeOrderedAndProject(limit=1, orderBy=[count(1)#306L DESC NULLS LAST], output=[IncidentGrade#316])
+               :           +- HashAggregate(keys=[IncidentGrade#316], functions=[count(1)], output=[IncidentGrade#316, count(1)#306L])
+               :              +- Exchange hashpartitioning(IncidentGrade#316, 200), ENSURE_REQUIREMENTS, [plan_id=786]
+               :                 +- HashAggregate(keys=[IncidentGrade#316], functions=[partial_count(1)], output=[IncidentGrade#316, count#361L])
+               :                    +- FileScan csv [IncidentGrade#316] Batched: false, DataFilters: [], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/home/hduser/mini_project_2/data/GUIDE_Test.csv], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<IncidentGrade:string>
                +- FileScan csv [AlertTitle#23,IncidentGrade#26] Batched: false, DataFilters: [isnotnull(IncidentGrade#26)], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/home/hduser/mini_project_2/data/GUIDE_Test.csv], PartitionFilters: [], PushedFilters: [IsNotNull(IncidentGrade)], ReadSchema: struct<AlertTitle:int,IncidentGrade:string>
 
 Query 8: SQL API
-Execution Time Q8: 28.1117 seconds
+Execution Time Q8: 25.5186 seconds
+Memory Impact Q8: 158.61 MB
 == Parsed Logical Plan ==
 'Aggregate ['Category], ['Category, unresolvedalias('COUNT(1), None)]
 +- 'UnresolvedRelation [public_usage], [], false
 
 == Analyzed Logical Plan ==
 Category: string, count(1): bigint
-Aggregate [Category#1951], [Category#1951, count(1) AS count(1)#1991L]
+Aggregate [Category#1941], [Category#1941, count(1) AS count(1)#1981L]
 +- SubqueryAlias public_usage
-   +- View (`public_usage`, [Id#1944L,OrgId#1945,IncidentId#1946,AlertId#1947,Timestamp#1948,DetectorId#1949,AlertTitle#1950,Category#1951,MitreTechniques#1952,IncidentGrade#1953,ActionGrouped#1954,ActionGranular#1955,EntityType#1956,EvidenceRole#1957,DeviceId#1958,Sha256#1959,IpAddress#1960,Url#1961,AccountSid#1962,AccountUpn#1963,AccountObjectId#1964,AccountName#1965,DeviceName#1966,NetworkMessageId#1967,EmailClusterId#1968,RegistryKey#1969,RegistryValueName#1970,RegistryValueData#1971,ApplicationId#1972,ApplicationName#1973,OAuthApplicationId#1974,ThreatFamily#1975,FileName#1976,FolderPath#1977,ResourceIdName#1978,ResourceType#1979,Roles#1980,OSFamily#1981,OSVersion#1982,AntispamDirection#1983,SuspicionLevel#1984,LastVerdict#1985,CountryCode#1986,State#1987,City#1988,Usage#1989])
-      +- Project [cast(Id#17L as bigint) AS Id#1944L, cast(OrgId#18 as int) AS OrgId#1945, cast(IncidentId#19 as int) AS IncidentId#1946, cast(AlertId#20 as int) AS AlertId#1947, cast(Timestamp#21 as timestamp) AS Timestamp#1948, cast(DetectorId#22 as int) AS DetectorId#1949, cast(AlertTitle#23 as int) AS AlertTitle#1950, cast(Category#24 as string) AS Category#1951, cast(MitreTechniques#25 as string) AS MitreTechniques#1952, cast(IncidentGrade#26 as string) AS IncidentGrade#1953, cast(ActionGrouped#27 as string) AS ActionGrouped#1954, cast(ActionGranular#28 as string) AS ActionGranular#1955, cast(EntityType#29 as string) AS EntityType#1956, cast(EvidenceRole#30 as string) AS EvidenceRole#1957, cast(DeviceId#31 as int) AS DeviceId#1958, cast(Sha256#32 as int) AS Sha256#1959, cast(IpAddress#33 as int) AS IpAddress#1960, cast(Url#34 as int) AS Url#1961, cast(AccountSid#35 as int) AS AccountSid#1962, cast(AccountUpn#36 as int) AS AccountUpn#1963, cast(AccountObjectId#37 as int) AS AccountObjectId#1964, cast(AccountName#38 as int) AS AccountName#1965, cast(DeviceName#39 as int) AS DeviceName#1966, cast(NetworkMessageId#40 as int) AS NetworkMessageId#1967, ... 22 more fields]
+   +- View (`public_usage`, [Id#1934L,OrgId#1935,IncidentId#1936,AlertId#1937,Timestamp#1938,DetectorId#1939,AlertTitle#1940,Category#1941,MitreTechniques#1942,IncidentGrade#1943,ActionGrouped#1944,ActionGranular#1945,EntityType#1946,EvidenceRole#1947,DeviceId#1948,Sha256#1949,IpAddress#1950,Url#1951,AccountSid#1952,AccountUpn#1953,AccountObjectId#1954,AccountName#1955,DeviceName#1956,NetworkMessageId#1957,EmailClusterId#1958,RegistryKey#1959,RegistryValueName#1960,RegistryValueData#1961,ApplicationId#1962,ApplicationName#1963,OAuthApplicationId#1964,ThreatFamily#1965,FileName#1966,FolderPath#1967,ResourceIdName#1968,ResourceType#1969,Roles#1970,OSFamily#1971,OSVersion#1972,AntispamDirection#1973,SuspicionLevel#1974,LastVerdict#1975,CountryCode#1976,State#1977,City#1978,Usage#1979])
+      +- Project [cast(Id#17L as bigint) AS Id#1934L, cast(OrgId#18 as int) AS OrgId#1935, cast(IncidentId#19 as int) AS IncidentId#1936, cast(AlertId#20 as int) AS AlertId#1937, cast(Timestamp#21 as timestamp) AS Timestamp#1938, cast(DetectorId#22 as int) AS DetectorId#1939, cast(AlertTitle#23 as int) AS AlertTitle#1940, cast(Category#24 as string) AS Category#1941, cast(MitreTechniques#25 as string) AS MitreTechniques#1942, cast(IncidentGrade#26 as string) AS IncidentGrade#1943, cast(ActionGrouped#27 as string) AS ActionGrouped#1944, cast(ActionGranular#28 as string) AS ActionGranular#1945, cast(EntityType#29 as string) AS EntityType#1946, cast(EvidenceRole#30 as string) AS EvidenceRole#1947, cast(DeviceId#31 as int) AS DeviceId#1948, cast(Sha256#32 as int) AS Sha256#1949, cast(IpAddress#33 as int) AS IpAddress#1950, cast(Url#34 as int) AS Url#1951, cast(AccountSid#35 as int) AS AccountSid#1952, cast(AccountUpn#36 as int) AS AccountUpn#1953, cast(AccountObjectId#37 as int) AS AccountObjectId#1954, cast(AccountName#38 as int) AS AccountName#1955, cast(DeviceName#39 as int) AS DeviceName#1956, cast(NetworkMessageId#40 as int) AS NetworkMessageId#1957, ... 22 more fields]
          +- Project [Id#17L, OrgId#18, IncidentId#19, AlertId#20, Timestamp#21, DetectorId#22, AlertTitle#23, Category#24, MitreTechniques#25, IncidentGrade#26, ActionGrouped#27, ActionGranular#28, EntityType#29, EvidenceRole#30, DeviceId#31, Sha256#32, IpAddress#33, Url#34, AccountSid#35, AccountUpn#36, AccountObjectId#37, AccountName#38, DeviceName#39, NetworkMessageId#40, ... 22 more fields]
             +- Filter (Usage#62 = Public)
                +- SubqueryAlias incidents
@@ -256,24 +264,25 @@ Aggregate [Category#1951], [Category#1951, count(1) AS count(1)#1991L]
                      +- Relation [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,... 22 more fields] csv
 
 == Optimized Logical Plan ==
-Aggregate [Category#1951], [Category#1951, count(1) AS count(1)#1991L]
-+- Project [Category#1951]
-   +- InMemoryRelation [Id#1944L, OrgId#1945, IncidentId#1946, AlertId#1947, Timestamp#1948, DetectorId#1949, AlertTitle#1950, Category#1951, MitreTechniques#1952, IncidentGrade#1953, ActionGrouped#1954, ActionGranular#1955, EntityType#1956, EvidenceRole#1957, DeviceId#1958, Sha256#1959, IpAddress#1960, Url#1961, AccountSid#1962, AccountUpn#1963, AccountObjectId#1964, AccountName#1965, DeviceName#1966, NetworkMessageId#1967, ... 22 more fields], StorageLevel(disk, memory, deserialized, 1 replicas)
+Aggregate [Category#1941], [Category#1941, count(1) AS count(1)#1981L]
++- Project [Category#1941]
+   +- InMemoryRelation [Id#1934L, OrgId#1935, IncidentId#1936, AlertId#1937, Timestamp#1938, DetectorId#1939, AlertTitle#1940, Category#1941, MitreTechniques#1942, IncidentGrade#1943, ActionGrouped#1944, ActionGranular#1945, EntityType#1946, EvidenceRole#1947, DeviceId#1948, Sha256#1949, IpAddress#1950, Url#1951, AccountSid#1952, AccountUpn#1953, AccountObjectId#1954, AccountName#1955, DeviceName#1956, NetworkMessageId#1957, ... 22 more fields], StorageLevel(disk, memory, deserialized, 1 replicas)
          +- *(1) Filter (isnotnull(Usage#62) AND (Usage#62 = Public))
             +- FileScan csv [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,... 22 more fields] Batched: false, DataFilters: [isnotnull(Usage#62), (Usage#62 = Public)], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/home/hduser/mini_project_2/data/GUIDE_Test.csv], PartitionFilters: [], PushedFilters: [IsNotNull(Usage), EqualTo(Usage,Public)], ReadSchema: struct<Id:bigint,OrgId:int,IncidentId:int,AlertId:int,Timestamp:timestamp,DetectorId:int,AlertTit...
 
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
-+- HashAggregate(keys=[Category#1951], functions=[count(1)], output=[Category#1951, count(1)#1991L])
-   +- Exchange hashpartitioning(Category#1951, 200), ENSURE_REQUIREMENTS, [plan_id=942]
-      +- HashAggregate(keys=[Category#1951], functions=[partial_count(1)], output=[Category#1951, count#2687L])
-         +- Scan In-memory table public_usage [Category#1951]
-               +- InMemoryRelation [Id#1944L, OrgId#1945, IncidentId#1946, AlertId#1947, Timestamp#1948, DetectorId#1949, AlertTitle#1950, Category#1951, MitreTechniques#1952, IncidentGrade#1953, ActionGrouped#1954, ActionGranular#1955, EntityType#1956, EvidenceRole#1957, DeviceId#1958, Sha256#1959, IpAddress#1960, Url#1961, AccountSid#1962, AccountUpn#1963, AccountObjectId#1964, AccountName#1965, DeviceName#1966, NetworkMessageId#1967, ... 22 more fields], StorageLevel(disk, memory, deserialized, 1 replicas)
++- HashAggregate(keys=[Category#1941], functions=[count(1)], output=[Category#1941, count(1)#1981L])
+   +- Exchange hashpartitioning(Category#1941, 200), ENSURE_REQUIREMENTS, [plan_id=984]
+      +- HashAggregate(keys=[Category#1941], functions=[partial_count(1)], output=[Category#1941, count#3832L])
+         +- Scan In-memory table public_usage [Category#1941]
+               +- InMemoryRelation [Id#1934L, OrgId#1935, IncidentId#1936, AlertId#1937, Timestamp#1938, DetectorId#1939, AlertTitle#1940, Category#1941, MitreTechniques#1942, IncidentGrade#1943, ActionGrouped#1944, ActionGranular#1945, EntityType#1946, EvidenceRole#1947, DeviceId#1948, Sha256#1949, IpAddress#1950, Url#1951, AccountSid#1952, AccountUpn#1953, AccountObjectId#1954, AccountName#1955, DeviceName#1956, NetworkMessageId#1957, ... 22 more fields], StorageLevel(disk, memory, deserialized, 1 replicas)
                      +- *(1) Filter (isnotnull(Usage#62) AND (Usage#62 = Public))
                         +- FileScan csv [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,... 22 more fields] Batched: false, DataFilters: [isnotnull(Usage#62), (Usage#62 = Public)], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/home/hduser/mini_project_2/data/GUIDE_Test.csv], PartitionFilters: [], PushedFilters: [IsNotNull(Usage), EqualTo(Usage,Public)], ReadSchema: struct<Id:bigint,OrgId:int,IncidentId:int,AlertId:int,Timestamp:timestamp,DetectorId:int,AlertTit...
 
 Query 9: SQL API
-Execution Time Q9: 8.6991 seconds
+Execution Time Q9: 3.3101 seconds
+Memory Impact Q9: 259.93 MB
 == Parsed Logical Plan ==
 'UnresolvedHint BROADCAST, ['lookup]
 +- 'Project [i.*, 'l.GradeDescription]
@@ -286,52 +295,53 @@ Execution Time Q9: 8.6991 seconds
 == Analyzed Logical Plan ==
 Id: bigint, OrgId: int, IncidentId: int, AlertId: int, Timestamp: timestamp, DetectorId: int, AlertTitle: int, Category: string, MitreTechniques: string, IncidentGrade: string, ActionGrouped: string, ActionGranular: string, EntityType: string, EvidenceRole: string, DeviceId: int, Sha256: int, IpAddress: int, Url: int, AccountSid: int, AccountUpn: int, AccountObjectId: int, AccountName: int, DeviceName: int, NetworkMessageId: int, ... 23 more fields
 Project [Id#17L, OrgId#18, IncidentId#19, AlertId#20, Timestamp#21, DetectorId#22, AlertTitle#23, Category#24, MitreTechniques#25, IncidentGrade#26, ActionGrouped#27, ActionGranular#28, EntityType#29, EvidenceRole#30, DeviceId#31, Sha256#32, IpAddress#33, Url#34, AccountSid#35, AccountUpn#36, AccountObjectId#37, AccountName#38, DeviceName#39, NetworkMessageId#40, ... 23 more fields]
-+- Join Inner, (IncidentGrade#26 = IncidentGrade#3840)
++- Join Inner, (IncidentGrade#26 = IncidentGrade#3835)
    :- SubqueryAlias i
    :  +- SubqueryAlias incidents
    :     +- View (`incidents`, [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,EmailClusterId#41,RegistryKey#42,RegistryValueName#43,RegistryValueData#44,ApplicationId#45,ApplicationName#46,OAuthApplicationId#47,ThreatFamily#48,FileName#49,FolderPath#50,ResourceIdName#51,ResourceType#52,Roles#53,OSFamily#54,OSVersion#55,AntispamDirection#56,SuspicionLevel#57,LastVerdict#58,CountryCode#59,State#60,City#61,Usage#62])
    :        +- Relation [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,... 22 more fields] csv
    +- SubqueryAlias l
       +- SubqueryAlias lookup
-         +- View (`lookup`, [IncidentGrade#3840,GradeDescription#3841])
-            +- Project [cast(IncidentGrade#3838 as string) AS IncidentGrade#3840, cast(GradeDescription#3839 as string) AS GradeDescription#3841]
+         +- View (`lookup`, [IncidentGrade#3835,GradeDescription#3836])
+            +- Project [cast(IncidentGrade#3833 as string) AS IncidentGrade#3835, cast(GradeDescription#3834 as string) AS GradeDescription#3836]
                +- Distinct
                   +- Union false, false
-                     :- Project [TP AS IncidentGrade#3838, True Positive AS GradeDescription#3839]
+                     :- Project [TP AS IncidentGrade#3833, True Positive AS GradeDescription#3834]
                      :  +- OneRowRelation
-                     +- Project [FP AS FP#3842, False Positive AS False Positive#3843]
+                     +- Project [FP AS FP#3837, False Positive AS False Positive#3838]
                         +- OneRowRelation
 
 == Optimized Logical Plan ==
 Project [Id#17L, OrgId#18, IncidentId#19, AlertId#20, Timestamp#21, DetectorId#22, AlertTitle#23, Category#24, MitreTechniques#25, IncidentGrade#26, ActionGrouped#27, ActionGranular#28, EntityType#29, EvidenceRole#30, DeviceId#31, Sha256#32, IpAddress#33, Url#34, AccountSid#35, AccountUpn#36, AccountObjectId#37, AccountName#38, DeviceName#39, NetworkMessageId#40, ... 23 more fields]
-+- Join Inner, (IncidentGrade#26 = IncidentGrade#3838)
++- Join Inner, (IncidentGrade#26 = IncidentGrade#3833)
    :- Filter (((IncidentGrade#26 <=> TP) OR (IncidentGrade#26 <=> FP)) AND isnotnull(IncidentGrade#26))
    :  +- Relation [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,... 22 more fields] csv
-   +- Aggregate [IncidentGrade#3838, GradeDescription#3839], [IncidentGrade#3838, GradeDescription#3839]
+   +- Aggregate [IncidentGrade#3833, GradeDescription#3834], [IncidentGrade#3833, GradeDescription#3834]
       +- Union false, false
-         :- Project [TP AS IncidentGrade#3838, True Positive AS GradeDescription#3839]
+         :- Project [TP AS IncidentGrade#3833, True Positive AS GradeDescription#3834]
          :  +- OneRowRelation
-         +- Project [FP AS FP#3842, False Positive AS False Positive#3843]
+         +- Project [FP AS FP#3837, False Positive AS False Positive#3838]
             +- OneRowRelation
 
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
 +- Project [Id#17L, OrgId#18, IncidentId#19, AlertId#20, Timestamp#21, DetectorId#22, AlertTitle#23, Category#24, MitreTechniques#25, IncidentGrade#26, ActionGrouped#27, ActionGranular#28, EntityType#29, EvidenceRole#30, DeviceId#31, Sha256#32, IpAddress#33, Url#34, AccountSid#35, AccountUpn#36, AccountObjectId#37, AccountName#38, DeviceName#39, NetworkMessageId#40, ... 23 more fields]
-   +- BroadcastHashJoin [IncidentGrade#26], [IncidentGrade#3838], Inner, BuildRight, false
+   +- BroadcastHashJoin [IncidentGrade#26], [IncidentGrade#3833], Inner, BuildRight, false
       :- Filter (((IncidentGrade#26 <=> TP) OR (IncidentGrade#26 <=> FP)) AND isnotnull(IncidentGrade#26))
       :  +- FileScan csv [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,... 22 more fields] Batched: false, DataFilters: [((IncidentGrade#26 <=> TP) OR (IncidentGrade#26 <=> FP)), isnotnull(IncidentGrade#26)], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/home/hduser/mini_project_2/data/GUIDE_Test.csv], PartitionFilters: [], PushedFilters: [Or(EqualNullSafe(IncidentGrade,TP),EqualNullSafe(IncidentGrade,FP)), IsNotNull(IncidentGrade)], ReadSchema: struct<Id:bigint,OrgId:int,IncidentId:int,AlertId:int,Timestamp:timestamp,DetectorId:int,AlertTit...
-      +- BroadcastExchange HashedRelationBroadcastMode(List(input[0, string, false]),false), [plan_id=1169]
-         +- HashAggregate(keys=[IncidentGrade#3838, GradeDescription#3839], functions=[], output=[IncidentGrade#3838, GradeDescription#3839])
-            +- Exchange hashpartitioning(IncidentGrade#3838, GradeDescription#3839, 200), ENSURE_REQUIREMENTS, [plan_id=1166]
-               +- HashAggregate(keys=[IncidentGrade#3838, GradeDescription#3839], functions=[], output=[IncidentGrade#3838, GradeDescription#3839])
+      +- BroadcastExchange HashedRelationBroadcastMode(List(input[0, string, false]),false), [plan_id=1253]
+         +- HashAggregate(keys=[IncidentGrade#3833, GradeDescription#3834], functions=[], output=[IncidentGrade#3833, GradeDescription#3834])
+            +- Exchange hashpartitioning(IncidentGrade#3833, GradeDescription#3834, 200), ENSURE_REQUIREMENTS, [plan_id=1250]
+               +- HashAggregate(keys=[IncidentGrade#3833, GradeDescription#3834], functions=[], output=[IncidentGrade#3833, GradeDescription#3834])
                   +- Union
-                     :- Project [TP AS IncidentGrade#3838, True Positive AS GradeDescription#3839]
+                     :- Project [TP AS IncidentGrade#3833, True Positive AS GradeDescription#3834]
                      :  +- Scan OneRowRelation[]
-                     +- Project [FP AS FP#3842, False Positive AS False Positive#3843]
+                     +- Project [FP AS FP#3837, False Positive AS False Positive#3838]
                         +- Scan OneRowRelation[]
 
 Query 10: SQL API
-Execution Time Q10: 160.0162 seconds
+Execution Time Q10: 9.7915 seconds
+Memory Impact Q10: 167.61 MB
 == Parsed Logical Plan ==
 'UnresolvedHint MERGE, ['i1, 'i2]
 +- 'Project ['i1.IncidentId, 'i1.Category, 'i2.Usage]
@@ -344,9 +354,9 @@ Execution Time Q10: 160.0162 seconds
 
 == Analyzed Logical Plan ==
 IncidentId: int, Category: string, Usage: string
-Project [IncidentId#19, Category#24, Usage#4029]
-+- Filter ((Category#24 = Malware) AND (Usage#4029 = Public))
-   +- Join Inner, (IncidentId#19 = IncidentId#3986)
+Project [IncidentId#19, Category#24, Usage#3984]
++- Filter ((Category#24 = Malware) AND (Usage#3984 = Public))
+   +- Join Inner, (IncidentId#19 = IncidentId#3941)
       :- ResolvedHint (strategy=merge)
       :  +- SubqueryAlias i1
       :     +- SubqueryAlias incidents
@@ -355,29 +365,29 @@ Project [IncidentId#19, Category#24, Usage#4029]
       +- ResolvedHint (strategy=merge)
          +- SubqueryAlias i2
             +- SubqueryAlias incidents
-               +- View (`incidents`, [Id#3984L,OrgId#3985,IncidentId#3986,AlertId#3987,Timestamp#3988,DetectorId#3989,AlertTitle#3990,Category#3991,MitreTechniques#3992,IncidentGrade#3993,ActionGrouped#3994,ActionGranular#3995,EntityType#3996,EvidenceRole#3997,DeviceId#3998,Sha256#3999,IpAddress#4000,Url#4001,AccountSid#4002,AccountUpn#4003,AccountObjectId#4004,AccountName#4005,DeviceName#4006,NetworkMessageId#4007,EmailClusterId#4008,RegistryKey#4009,RegistryValueName#4010,RegistryValueData#4011,ApplicationId#4012,ApplicationName#4013,OAuthApplicationId#4014,ThreatFamily#4015,FileName#4016,FolderPath#4017,ResourceIdName#4018,ResourceType#4019,Roles#4020,OSFamily#4021,OSVersion#4022,AntispamDirection#4023,SuspicionLevel#4024,LastVerdict#4025,CountryCode#4026,State#4027,City#4028,Usage#4029])
-                  +- Relation [Id#3984L,OrgId#3985,IncidentId#3986,AlertId#3987,Timestamp#3988,DetectorId#3989,AlertTitle#3990,Category#3991,MitreTechniques#3992,IncidentGrade#3993,ActionGrouped#3994,ActionGranular#3995,EntityType#3996,EvidenceRole#3997,DeviceId#3998,Sha256#3999,IpAddress#4000,Url#4001,AccountSid#4002,AccountUpn#4003,AccountObjectId#4004,AccountName#4005,DeviceName#4006,NetworkMessageId#4007,... 22 more fields] csv
+               +- View (`incidents`, [Id#3939L,OrgId#3940,IncidentId#3941,AlertId#3942,Timestamp#3943,DetectorId#3944,AlertTitle#3945,Category#3946,MitreTechniques#3947,IncidentGrade#3948,ActionGrouped#3949,ActionGranular#3950,EntityType#3951,EvidenceRole#3952,DeviceId#3953,Sha256#3954,IpAddress#3955,Url#3956,AccountSid#3957,AccountUpn#3958,AccountObjectId#3959,AccountName#3960,DeviceName#3961,NetworkMessageId#3962,EmailClusterId#3963,RegistryKey#3964,RegistryValueName#3965,RegistryValueData#3966,ApplicationId#3967,ApplicationName#3968,OAuthApplicationId#3969,ThreatFamily#3970,FileName#3971,FolderPath#3972,ResourceIdName#3973,ResourceType#3974,Roles#3975,OSFamily#3976,OSVersion#3977,AntispamDirection#3978,SuspicionLevel#3979,LastVerdict#3980,CountryCode#3981,State#3982,City#3983,Usage#3984])
+                  +- Relation [Id#3939L,OrgId#3940,IncidentId#3941,AlertId#3942,Timestamp#3943,DetectorId#3944,AlertTitle#3945,Category#3946,MitreTechniques#3947,IncidentGrade#3948,ActionGrouped#3949,ActionGranular#3950,EntityType#3951,EvidenceRole#3952,DeviceId#3953,Sha256#3954,IpAddress#3955,Url#3956,AccountSid#3957,AccountUpn#3958,AccountObjectId#3959,AccountName#3960,DeviceName#3961,NetworkMessageId#3962,... 22 more fields] csv
 
 == Optimized Logical Plan ==
-Project [IncidentId#19, Category#24, Usage#4029]
-+- Join Inner, (IncidentId#19 = IncidentId#3986), leftHint=(strategy=merge), rightHint=(strategy=merge)
+Project [IncidentId#19, Category#24, Usage#3984]
++- Join Inner, (IncidentId#19 = IncidentId#3941), leftHint=(strategy=merge), rightHint=(strategy=merge)
    :- Project [IncidentId#19, Category#24]
    :  +- Filter ((isnotnull(Category#24) AND (Category#24 = Malware)) AND isnotnull(IncidentId#19))
    :     +- Relation [Id#17L,OrgId#18,IncidentId#19,AlertId#20,Timestamp#21,DetectorId#22,AlertTitle#23,Category#24,MitreTechniques#25,IncidentGrade#26,ActionGrouped#27,ActionGranular#28,EntityType#29,EvidenceRole#30,DeviceId#31,Sha256#32,IpAddress#33,Url#34,AccountSid#35,AccountUpn#36,AccountObjectId#37,AccountName#38,DeviceName#39,NetworkMessageId#40,... 22 more fields] csv
-   +- Project [IncidentId#3986, Usage#4029]
-      +- Filter ((isnotnull(Usage#4029) AND (Usage#4029 = Public)) AND isnotnull(IncidentId#3986))
-         +- Relation [Id#3984L,OrgId#3985,IncidentId#3986,AlertId#3987,Timestamp#3988,DetectorId#3989,AlertTitle#3990,Category#3991,MitreTechniques#3992,IncidentGrade#3993,ActionGrouped#3994,ActionGranular#3995,EntityType#3996,EvidenceRole#3997,DeviceId#3998,Sha256#3999,IpAddress#4000,Url#4001,AccountSid#4002,AccountUpn#4003,AccountObjectId#4004,AccountName#4005,DeviceName#4006,NetworkMessageId#4007,... 22 more fields] csv
+   +- Project [IncidentId#3941, Usage#3984]
+      +- Filter ((isnotnull(Usage#3984) AND (Usage#3984 = Public)) AND isnotnull(IncidentId#3941))
+         +- Relation [Id#3939L,OrgId#3940,IncidentId#3941,AlertId#3942,Timestamp#3943,DetectorId#3944,AlertTitle#3945,Category#3946,MitreTechniques#3947,IncidentGrade#3948,ActionGrouped#3949,ActionGranular#3950,EntityType#3951,EvidenceRole#3952,DeviceId#3953,Sha256#3954,IpAddress#3955,Url#3956,AccountSid#3957,AccountUpn#3958,AccountObjectId#3959,AccountName#3960,DeviceName#3961,NetworkMessageId#3962,... 22 more fields] csv
 
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
-+- Project [IncidentId#19, Category#24, Usage#4029]
-   +- SortMergeJoin [IncidentId#19], [IncidentId#3986], Inner
++- Project [IncidentId#19, Category#24, Usage#3984]
+   +- SortMergeJoin [IncidentId#19], [IncidentId#3941], Inner
       :- Sort [IncidentId#19 ASC NULLS FIRST], false, 0
-      :  +- Exchange hashpartitioning(IncidentId#19, 200), ENSURE_REQUIREMENTS, [plan_id=1348]
+      :  +- Exchange hashpartitioning(IncidentId#19, 200), ENSURE_REQUIREMENTS, [plan_id=1486]
       :     +- Filter ((isnotnull(Category#24) AND (Category#24 = Malware)) AND isnotnull(IncidentId#19))
       :        +- FileScan csv [IncidentId#19,Category#24] Batched: false, DataFilters: [isnotnull(Category#24), (Category#24 = Malware), isnotnull(IncidentId#19)], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/home/hduser/mini_project_2/data/GUIDE_Test.csv], PartitionFilters: [], PushedFilters: [IsNotNull(Category), EqualTo(Category,Malware), IsNotNull(IncidentId)], ReadSchema: struct<IncidentId:int,Category:string>
-      +- Sort [IncidentId#3986 ASC NULLS FIRST], false, 0
-         +- Exchange hashpartitioning(IncidentId#3986, 200), ENSURE_REQUIREMENTS, [plan_id=1349]
-            +- Filter ((isnotnull(Usage#4029) AND (Usage#4029 = Public)) AND isnotnull(IncidentId#3986))
-               +- FileScan csv [IncidentId#3986,Usage#4029] Batched: false, DataFilters: [isnotnull(Usage#4029), (Usage#4029 = Public), isnotnull(IncidentId#3986)], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/home/hduser/mini_project_2/data/GUIDE_Test.csv], PartitionFilters: [], PushedFilters: [IsNotNull(Usage), EqualTo(Usage,Public), IsNotNull(IncidentId)], ReadSchema: struct<IncidentId:int,Usage:string>
+      +- Sort [IncidentId#3941 ASC NULLS FIRST], false, 0
+         +- Exchange hashpartitioning(IncidentId#3941, 200), ENSURE_REQUIREMENTS, [plan_id=1487]
+            +- Filter ((isnotnull(Usage#3984) AND (Usage#3984 = Public)) AND isnotnull(IncidentId#3941))
+               +- FileScan csv [IncidentId#3941,Usage#3984] Batched: false, DataFilters: [isnotnull(Usage#3984), (Usage#3984 = Public), isnotnull(IncidentId#3941)], Format: CSV, Location: InMemoryFileIndex(1 paths)[file:/home/hduser/mini_project_2/data/GUIDE_Test.csv], PartitionFilters: [], PushedFilters: [IsNotNull(Usage), EqualTo(Usage,Public), IsNotNull(IncidentId)], ReadSchema: struct<IncidentId:int,Usage:string>
 
