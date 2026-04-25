@@ -1,20 +1,30 @@
 Query 1: RDD API
-Execution Time Q1: 31.6196 seconds
+Execution Time Q1: 36.5789 seconds
+Memory Impact Q1: 381.11 MB
 Query 2: RDD API
-Execution Time Q2: 31.6321 seconds
+Execution Time Q2: 36.6540 seconds
+Memory Impact Q2: 0.00 MB
 Query 3: RDD API
-Execution Time Q3: 29.7343 seconds
+Execution Time Q3: 35.4868 seconds
+Memory Impact Q3: 605.75 MB
 Query 4: RDD API
-Execution Time Q4: 33.1145 seconds
+Execution Time Q4: 38.4559 seconds
+Memory Impact Q4: 0.00 MB
 Query 5: RDD API
-Execution Time Q5: 33.1284 seconds
+Execution Time Q5: 39.0019 seconds
+Memory Impact Q5: 0.00 MB
 Query 6: RDD API
-Execution Time Q6: 39.1462 seconds
+Execution Time Q6: 46.9632 seconds
+Memory Impact Q6: 0.00 MB
 Query 7: RDD API
-Execution Time Q7: 62.3967 seconds
+Execution Time Q7: 75.1223 seconds
+Memory Impact Q7: 624.84 MB
 Query 8: RDD API
-Execution Time Q8: 43.0414 seconds
+Execution Time Q8: 54.4384 seconds
+Memory Impact Q8: 0.00 MB
 Query 9: RDD API
-Execution Time Q9: 36.3307 seconds
+Execution Time Q9: 41.3613 seconds
+Memory Impact Q9: 0.00 MB
 Query 10: RDD API
-Execution Time Q10: 100.8837 seconds
+Execution Time Q10: 118.5680 seconds
+Memory Impact Q10: 32.47 MB
