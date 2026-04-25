@@ -3,11 +3,12 @@ import shutil
 import os
 from pyspark.sql import SparkSession
 
-# Clear previous RDD results to prevent write errors
-if os.path.exists("/home/hduser/mini_project_2/results/"):
-    for item in os.listdir("/home/hduser/mini_project_2/results/"):
-        if item.startswith("rdd_"):
-            shutil.rmtree(os.path.join("/home/hduser/mini_project_2/results/", item))
+results_dir = "/home/hduser/mini_project_2/results/"
+if os.path.exists(results_dir):
+    for item in os.listdir(results_dir):
+        item_path = os.path.join(results_dir, item)
+        if item.startswith("rdd_q") and os.path.isdir(item_path):
+            shutil.rmtree(item_path)
 
 spark = SparkSession.builder \
     .appName("RDD_Queries") \
