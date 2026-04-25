@@ -2,40 +2,33 @@ from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 
-# Initialize Spark Session
 spark = SparkSession.builder \
     .appName("DataFrame_Queries") \
     .config("spark.sql.join.preferSortMergeJoin", "true") \
     .getOrCreate()
 
-# Load Dataset
-df = spark.read.csv("data/GUIDE_Test.csv", header=True, inferSchema=True)
+df = spark.read.csv("file:///home/hduser/mini_project_2/data/GUIDE_Test.csv", header=True, inferSchema=True)
 
-# Query 1: Basic Filtering
 print("Query 1: DataFrame API")
 q1 = df.filter(df["Category"] == "Malware").groupBy("IncidentGrade").count()
 q1.show()
 q1.explain(True)
 
-# Query 2: Multiple Grouping & Aggregations
 print("Query 2: DataFrame API")
 q2 = df.groupBy("Category", "Usage").agg(F.count("*").alias("TotalCount"))
 q2.show()
 q2.explain(True)
 
-# Query 3: Complex Filtering
 print("Query 3: DataFrame API")
 q3 = df.filter((df["Usage"] == "Public") & (df["Category"] != "Test"))
 q3.show()
 q3.explain(True)
 
-# Query 4: Sorting and Ranking
 print("Query 4: DataFrame API")
 q4 = df.groupBy("AlertTitle").count().orderBy(F.desc("count"))
 q4.show()
 q4.explain(True)
 
-# Query 5: Window Functions (Ranking)
 print("Query 5: DataFrame API")
 window_spec = Window.partitionBy("Category").orderBy(F.desc("count"))
 q5_base = df.groupBy("Category", "AlertTitle").count()
@@ -43,7 +36,6 @@ q5 = q5_base.withColumn("Rank", F.rank().over(window_spec))
 q5.show()
 q5.explain(True)
 
-# Query 6: Window Functions (Cumulative Sum)
 print("Query 6: DataFrame API")
 window_cumulative = Window.orderBy("Timestamp").rowsBetween(Window.unboundedPreceding, Window.currentRow)
 q6_base = df.groupBy("Timestamp").count()
@@ -51,7 +43,6 @@ q6 = q6_base.withColumn("CumulativeCount", F.sum("count").over(window_cumulative
 q6.show()
 q6.explain(True)
 
-# Query 7: Nested/Subquery Equivalent
 print("Query 7: DataFrame API")
 inner_query = df.groupBy("IncidentGrade").count().orderBy(F.desc("count")).limit(1)
 top_grade = inner_query.collect()[0]["IncidentGrade"]
@@ -59,14 +50,12 @@ q7 = df.filter(df["IncidentGrade"] == top_grade).select("AlertTitle").distinct()
 q7.show()
 q7.explain(True)
 
-# Query 8: Caching
 print("Query 8: DataFrame API")
 cached_df = df.filter(df["Usage"] == "Public").cache()
 q8 = cached_df.groupBy("Category").count()
 q8.show()
 q8.explain(True)
 
-# Query 9: Broadcast Join
 print("Query 9: DataFrame API")
 lookup_data = [("TP", "True Positive"), ("FP", "False Positive")]
 lookup_df = spark.createDataFrame(lookup_data, ["IncidentGrade", "GradeDescription"])
@@ -74,7 +63,6 @@ q9 = df.join(F.broadcast(lookup_df), "IncidentGrade")
 q9.show()
 q9.explain(True)
 
-# Query 10: Sort-Merge Join
 print("Query 10: DataFrame API")
 df_subset1 = df.filter(df["Category"] == "Malware")
 df_subset2 = df.filter(df["Usage"] == "Public")
